@@ -1,0 +1,221 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="DM_Empresas.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Cidades">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nome" Type="nvarchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Clientes">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="LimiteCredito" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="Vendedor" Type="nvarchar" MaxLength="50" />
+          <Property Name="CreditoLiberado" Type="bit" />
+        </EntityType>
+        <EntityType Name="Empresas">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nome" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Endereco" Type="varchar(max)" />
+          <Property Name="Telefone" Type="varchar" MaxLength="25" />
+          <Property Name="CNPJ" Type="nchar" MaxLength="18" Nullable="false" />
+          <Property Name="CidadeID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Fornecedores">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="DataUltimaCompra" Type="datetime" />
+          <Property Name="Comprador" Type="nvarchar" MaxLength="80" />
+        </EntityType>
+        <Association Name="FK_CidadeID">
+          <End Role="Cidades" Type="Self.Cidades" Multiplicity="1" />
+          <End Role="Empresas" Type="Self.Empresas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cidades">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Empresas">
+              <PropertyRef Name="CidadeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Cliente_Empresa">
+          <End Role="Empresas" Type="Self.Empresas" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Clientes" Type="Self.Clientes" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Empresas">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Clientes">
+              <PropertyRef Name="ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Fornecedor_Empresa">
+          <End Role="Empresas" Type="Self.Empresas" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Fornecedores" Type="Self.Fornecedores" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Empresas">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Fornecedores">
+              <PropertyRef Name="ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DM_EmpresasStoreContainer">
+          <EntitySet Name="Cidades" EntityType="Self.Cidades" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Clientes" EntityType="Self.Clientes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Empresas" EntityType="Self.Empresas" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Fornecedores" EntityType="Self.Fornecedores" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_CidadeID" Association="Self.FK_CidadeID">
+            <End Role="Cidades" EntitySet="Cidades" />
+            <End Role="Empresas" EntitySet="Empresas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Cliente_Empresa" Association="Self.FK_Cliente_Empresa">
+            <End Role="Empresas" EntitySet="Empresas" />
+            <End Role="Clientes" EntitySet="Clientes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Fornecedor_Empresa" Association="Self.FK_Fornecedor_Empresa">
+            <End Role="Empresas" EntitySet="Empresas" />
+            <End Role="Fornecedores" EntitySet="Fornecedores" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="DM_Empresas" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
+        <EntityContainer Name="DM_EmpresasContainer" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="EmpresaSet" EntityType="DM_Empresas.Empresa" />
+          <EntitySet Name="CidadeSet" EntityType="DM_Empresas.Cidade" />
+          <AssociationSet Name="CidadeEmpresa" Association="DM_Empresas.CidadeEmpresa">
+            <End Role="Cidade" EntitySet="CidadeSet" />
+            <End Role="Empresa" EntitySet="EmpresaSet" />
+          </AssociationSet>
+          </EntityContainer>
+        <EntityType Name="Empresa">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nome" Type="String" Nullable="false" MaxLength="100" Unicode="false" FixedLength="false" />
+          <Property Name="Endereco" Type="String" Nullable="true" FixedLength="false" MaxLength="Max" Unicode="false" />
+          <Property Name="Telefone" Type="String" Nullable="true" FixedLength="false" MaxLength="25" Unicode="false" />
+          <Property Name="CNPJ" Type="String" FixedLength="true" MaxLength="18" Nullable="false" />
+          <NavigationProperty Name="Cidade" Relationship="DM_Empresas.CidadeEmpresa" FromRole="Empresa" ToRole="Cidade" />
+          <Property Name="CidadeID" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Cidade">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nome" Type="String" Nullable="false" FixedLength="false" MaxLength="100" />
+          <NavigationProperty Name="Empresa" Relationship="DM_Empresas.CidadeEmpresa" FromRole="Cidade" ToRole="Empresa" />
+        </EntityType>
+        <Association Name="CidadeEmpresa">
+          <End Type="DM_Empresas.Cidade" Role="Cidade" Multiplicity="1" />
+          <End Type="DM_Empresas.Empresa" Role="Empresa" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cidade">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Empresa">
+              <PropertyRef Name="CidadeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Cliente" BaseType="DM_Empresas.Empresa" >
+          <Property Name="LimiteCredito" Type="Decimal" Nullable="true" />
+          <Property Name="Vendedor" Type="String" Nullable="true" MaxLength="50" />
+          <Property Name="CreditoLiberado" Type="Boolean" Nullable="true" />
+        </EntityType>
+        <EntityType Name="Fornecedor" BaseType="DM_Empresas.Empresa" >
+          <Property Name="DataUltimaCompra" Type="DateTime" />
+          <Property Name="Comprador" Type="String" Nullable="true" MaxLength="80" />
+        </EntityType>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs" Space="C-S">
+        <Alias Key="Model" Value="DM_Empresas" />
+        <Alias Key="Target" Value="DM_Empresas.Store" />
+        <EntityContainerMapping CdmEntityContainer="DM_EmpresasContainer" StorageEntityContainer="DM_EmpresasStoreContainer">
+          <EntitySetMapping Name="CidadeSet">
+            <EntityTypeMapping TypeName="IsTypeOf(DM_Empresas.Cidade)">
+              <MappingFragment StoreEntitySet="Cidades">
+                <ScalarProperty Name="Nome" ColumnName="Nome" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EmpresaSet">
+            <EntityTypeMapping TypeName="IsTypeOf(DM_Empresas.Fornecedor)">
+              <MappingFragment StoreEntitySet="Fornecedores">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Comprador" ColumnName="Comprador" />
+                <ScalarProperty Name="DataUltimaCompra" ColumnName="DataUltimaCompra" />
+              </MappingFragment>
+            </EntityTypeMapping>
+            <EntityTypeMapping TypeName="IsTypeOf(DM_Empresas.Cliente)">
+              <MappingFragment StoreEntitySet="Clientes">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="CreditoLiberado" ColumnName="CreditoLiberado" />
+                <ScalarProperty Name="Vendedor" ColumnName="Vendedor" />
+                <ScalarProperty Name="LimiteCredito" ColumnName="LimiteCredito" />
+              </MappingFragment>
+            </EntityTypeMapping>
+            <EntityTypeMapping TypeName="IsTypeOf(DM_Empresas.Empresa)">
+              <MappingFragment StoreEntitySet="Empresas">
+                <ScalarProperty Name="CidadeID" ColumnName="CidadeID" />
+                <ScalarProperty Name="CNPJ" ColumnName="CNPJ" />
+                <ScalarProperty Name="Telefone" ColumnName="Telefone" />
+                <ScalarProperty Name="Endereco" ColumnName="Endereco" />
+                <ScalarProperty Name="Nome" ColumnName="Nome" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <edmx:Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="UseLegacyProvider" Value="False" />
+      </DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
